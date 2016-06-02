@@ -355,7 +355,7 @@ end
    % if v == 8 (e.g. LCxLC)
    %    set(handles.title,'String','LCxLC');
    %
-   % Here will follow all guiding text for the input arguments
+   % Here will follow all guiding text for the input arguments and visibility settings
    % end
 
 % --- Executes during object creation, after setting all properties.
@@ -589,8 +589,8 @@ if vv == 2; % LC open column
         v_opt = L(r,1);
         
         % Output
-        h_ = num2str(h_min);
-        v_ = num2str(v_opt);
+        h_ = num2str(h_min); % Reduced parameter cannot be editted
+        v_ = num2str(v_opt); % Reduced parameter cannot be editted
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -598,7 +598,8 @@ if vv == 2; % LC open column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 10 0 (h_min+10)]);
+        % Reduced parameters cannot be editted
+        axis([0 10 0 (h_min+10)]); % Edit to resize graph
     end
     
     % From here additional equations can be entered for LC (open column)
@@ -1458,6 +1459,8 @@ q = get(handles.parameters,'Value');
         set(handles.abc,'Visible','on');
         end
         
+        % Add from here new text and visibility settings for 
+        % new added equations (normal parameters) into the GUI for GC (packed column) 
         
    end
    
@@ -1488,7 +1491,7 @@ q = get(handles.parameters,'Value');
         end
         
         % Add from here new text and visibility settings for 
-        % new added equations into the GUI for GC (packed column) 
+        % new added equations (normal parameters)  into the GUI for GC (packed column) 
         
    end
    
@@ -1518,7 +1521,7 @@ q = get(handles.parameters,'Value');
         set(handles.dm,'Visible','on');
         set(handles.abc,'Visible','on');
        end
-      
+       
         if q == 3; % Reduced Van Deemter
         
         set(handles.text1,'String','A-term');
@@ -1570,7 +1573,9 @@ q = get(handles.parameters,'Value');
         
   end
   
+  %
   % Start here with adding text and visibility settings for new added systems
+  %
   
 % --- Executes during object creation, after setting all properties.
 function parameters_CreateFcn(hObject, eventdata, handles)
@@ -1615,7 +1620,8 @@ if l == 2
     if p == 1
     end
 
-    if p == 2 % Golay equation
+    if p == 2 % OPen column LC
+        % Golay equation
         set(handles.text1,'String','Film thickness (um)');
         set(handles.text2,'String','Column diameter (um)');
         set(handles.text3,'String','Diffusion coefficient (mobile phase) (1e-9 m2/s)');
@@ -1668,6 +1674,8 @@ if l == 2
         set(handles.edit10,'Visible','off');
         
     end
+    
+    % Add here text and visibility settings for new equations (open column LC)
 
 end
 
@@ -1726,6 +1734,9 @@ if l == 4 % Open column GC
         set(handles.text10,'Visible','off');
         set(handles.edit10,'Visible','off');
     end
+    
+    % Add here text and visibility settings for new equations (open column GC)
+    
 end
 
 if l == 6 % Open column SFC
@@ -1783,7 +1794,12 @@ if l == 6 % Open column SFC
         set(handles.text10,'Visible','off');
         set(handles.edit10,'Visible','off');
     end
+    
+    % Add here text and visibility settings for new equations (open column LC)
+    
 end
+
+% Add here text and visibility settings for new added systems (e.g. LCxLC)
 
 % --- Executes during object creation, after setting all properties.
 function parameters2_CreateFcn(hObject, eventdata, handles)
