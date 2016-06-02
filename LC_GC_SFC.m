@@ -150,8 +150,8 @@ function chrom_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns chrom contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from chrom
 
-v = get(handles.chrom,'Value');
-if v == 1;
+v = get(handles.chrom,'Value'); %Get selection from pop-up menu for chromatographic system
+if v == 1; % First rule is empty 
 end
 
 if v == 2; %LC open column
@@ -261,7 +261,6 @@ if v == 5; %GC packed column
    set(handles.title,'Visible','on');
    
    set(handles.text1,'String','Particle size (um)');
-   %set(handles.text2,'String','Column diameter (mm)');
    set(handles.text2,'String','Diffusion coefficient (1e-6 m2/s)');
    set(handles.edit3,'Visible','on');
    set(handles.text3,'Visible','on');
@@ -327,13 +326,11 @@ if v == 7; %SFC packed column
    set(handles.title,'Visible','on');
    
    set(handles.text1,'String','Particle size (um)');
-   %set(handles.text2,'String','Column diameter (mm)');
    set(handles.text2,'String','Diffusion coefficient (SF)(1e-8 m2/s)');
    set(handles.edit3,'Visible','on');
    set(handles.text3,'Visible','on');
    set(handles.edit4,'Visible','on');
    set(handles.text4,'Visible','on');
-   %set(handles.text4,'String','Volume fraction');
    set(handles.text3,'String','A-term');
    set(handles.text5,'Visible','on');
    set(handles.text4,'String','B-term');
@@ -353,6 +350,13 @@ if v == 7; %SFC packed column
    set(handles.edit10,'Visible','off');
    
 end
+
+ % When more chromatograhic systems will be added (e.g. two-dimensional systems) continue here with v == 8 (see below)
+   % if v == 8 (e.g. LCxLC)
+   %    set(handles.title,'String','LCxLC');
+   %
+   % Here will follow all guiding text for the input arguments
+   % end
 
 % --- Executes during object creation, after setting all properties.
 function chrom_CreateFcn(hObject, eventdata, handles)
@@ -488,7 +492,7 @@ function reset_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 close LC_GC_SFC
-run LC_GC_SFC
+run LC_GC_SFC % Application will be closed and restarted by clicking 'Reset'
 
 % --- Executes on button press in calculate.
 function calculate_Callback(hObject, eventdata, handles)
@@ -496,11 +500,11 @@ function calculate_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-vv = get(handles.chrom,'Value');
+vv = get(handles.chrom,'Value'); % Getting chosen chromatographic system
 
 if vv == 2; % LC open column
     
-    pp = get(handles.parameters2,'Value');
+    pp = get(handles.parameters2,'Value'); % Getting chosen type of equation
     
     if pp == 2 % Normal Golay
     
@@ -526,12 +530,12 @@ if vv == 2; % LC open column
     if k<=0, error('Irregular value');end
     if k == 1, error('Irregular value');end
     
-    % Convert to right units
+    % Convert to right units DO NOT EDIT!
     df_ = df.*1e-6; 
     dc_ = dc.*1e-6;
     D_f_ = D_f.*1e-11;
     D_m_ = D_m.*1e-9;
-    
+  
     % Calculations
     N = 100000;% number of data points
     u_m = linspace(0.001e-3,1e-4,N)';% m/s
@@ -544,7 +548,7 @@ if vv == 2; % LC open column
     u_opt = L(r,1);
     
     % Output
-    u_opt_ = u_opt.*1e6;
+    u_opt_ = u_opt.*1e6; % Output units can be changed, but be aware that you change also the guiding text next to the output fields!
     H_min_ = H_min*1e3;
     u_ = num2str(u_opt_); % m/s
     H_ = num2str(H_min_); %mm
@@ -552,10 +556,10 @@ if vv == 2; % LC open column
     set(handles.edit9,'String',H_);
     
     figure;
-    plot(u_m.*1e6,H.*1e3,'-');
+    plot(u_m.*1e6,H.*1e3,'-');% Also here output units can be changed, but make sure axis labels are right!
     xlabel('Linear flow velocity (um/s)');
     ylabel('Theoretical plate height (mm)');
-    axis([0 100 0 H_min_+2]);
+    axis([0 100 0 H_min_+2]); % To change min and max axis change values here
     end
     
     if pp == 3 % Reduced Golay
@@ -574,7 +578,7 @@ if vv == 2; % LC open column
         if k == 1, error('Irregular value');end
         
         % Calculations
-        N = 1000;
+        N = 1000; % This number can be changed to finetune the output graph 
         v = linspace(0.001,10,N)';
         f = ((11*k^2)+(6*k)+1)/(96*((1+k)^2));
         g = (2*k)/(3*((1+k)^2));
@@ -596,6 +600,11 @@ if vv == 2; % LC open column
         ylabel('Reduced plate height');
         axis([0 10 0 (h_min+10)]);
     end
+    
+    % From here additional equations can be entered for LC (open column)
+    % if pp == 4
+    %   ...
+    % end
         
 end
 
@@ -623,7 +632,7 @@ if vv == 3; % LC packed column
         B = str2double(f);
         C = str2double(g);
         
-        % Convert values to right units
+        % Convert values to right units DO NOT EDIT!
         dp = dp_/1e6;
         dc = dc_/1e3;
         D = D_/1e9;
@@ -639,7 +648,7 @@ if vv == 3; % LC packed column
         elseif E>0.99, error('Irregular value');end
         
         % Calculations
-        N = 100000;% number of data points
+        N = 100000;% number of data points, can be changed to finetine output graph
         u_m = linspace(0.001,0.1,N)';% m/s
         H_m = (A.*dp)+((B.*D)./u_m)+(C.*((dp.^2).*u_m)./D);% plate height in meters
         H_min = min(H_m);% plate height in meters
@@ -650,18 +659,18 @@ if vv == 3; % LC packed column
         F_mLmin = F_opt*(60e6);
                 
         % Output values
-        u_ = num2str(u_opt);
-        H_ = num2str(H_min*1e6);
-        F_ = num2str(F_mLmin);
+        u_ = num2str(u_opt); %Unit can be changed, be aware guiding text next to output field is in accordance
+        H_ = num2str(H_min*1e6); %Unit can be changed, be aware guiding text next to output field is in accordance
+        F_ = num2str(F_mLmin); %Unit can be changed, be aware guiding text next to output field is in accordance
         set(handles.edit8,'String',F_);
         set(handles.edit10,'String',H_);
         set(handles.edit9,'String',u_);
         
         figure;
-        plot(u_m,H_m.*1e6,'-');
+        plot(u_m,H_m.*1e6,'-');%Unit can be changed, be aware axis labels are in accordance
         xlabel('Linear flow velocity (m/s)');
         ylabel('Theoretical plate height ( \mu m)');
-        axis([0 0.1 0 20]);
+        axis([0 0.1 0 20]);% Change to alter minimum and maximum axis of graph
                 
     end
     
@@ -673,7 +682,7 @@ if vv == 3; % LC packed column
         C = str2double(c);
         
         % Calculations
-        v = linspace(0.001,20,100000)';
+        v = linspace(0.001,20,100000)'; %This can be altered to change the starting point (1), end point (2), and number of data points (3)
         h = A + (B./v) + (C.*v);
         h_min = min(h);
         L = [v h];
@@ -681,8 +690,8 @@ if vv == 3; % LC packed column
         v_opt = (L(r,1));
         
         % Output
-        v_ = num2str(v_opt);
-        h_ = num2str(h_min);
+        v_ = num2str(v_opt);% Cannot be altered since these is a reduced parameter
+        h_ = num2str(h_min);% Cannot be altered since these is a reduced parameter
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -690,7 +699,7 @@ if vv == 3; % LC packed column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 20 0 (h_min+10)]);
+        axis([0 20 0 (h_min+10)]);% Change to alter to min and max of the axis
     end
     
     if qq == 4 % Knox
@@ -709,8 +718,8 @@ if vv == 3; % LC packed column
         v_opt = (L(r,1));
         
         % Output
-        v_ = num2str(v_opt);
-        h_ = num2str(h_min);
+        v_ = num2str(v_opt);% Cannot be altered since these is a reduced parameter
+        h_ = num2str(h_min);% Cannot be altered since these is a reduced parameter
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -718,8 +727,13 @@ if vv == 3; % LC packed column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 10 0 (h_min+10)]);
+        axis([0 10 0 (h_min+10)]);% Change to alter to min and max of the axis
     end
+    
+    % From here new equations can be added for LC (packed column)
+    % if qq == 5
+    %   ....
+    % end
     
 end
 
@@ -751,15 +765,15 @@ if vv == 4; % GC open column
     if k<=0, error('Irregular value');end
     if k == 1, error('Irregular value');end
     
-    % Convert to right units
+    % Convert to right units DO NOT EDIT!
     df_ = df.*1e-6; 
     dc_ = dc.*1e-3;
     D_f_ = D_f.*1e-11;
     D_m_ = D_m.*1e-4;
     
     % Calculations
-    N = 100000;% number of data points
-    u_m = linspace(0.001,0.9,N)';% m/s
+    N = 100000;% number of data points, change to finetune the output graph
+    u_m = linspace(0.001,0.9,N)';% m/s, change start point (1) and/or end point (2) to finetune output graph
     fk = (11*(k^2)+(6*k)+1)/(96*((1+k)^2));
     gk = (2*k)/(3*((1-k)^2));
     H = ((2.*D_m_)./u_m)+(fk.*((dc_^2.*u_m)./D_m_))+(gk.*((df_^2.*u_m)./D_f_));
@@ -775,12 +789,14 @@ if vv == 4; % GC open column
     H_ = num2str(H_min_); %mm
     set(handles.edit8,'String',u_);
     set(handles.edit9,'String',H_);
+    % Output units can be altered, be aware guiding text is in accordance
     
     figure;
     plot(u_m,H.*1e3,'-');
     xlabel('Linear flow velocity (m/s)');
     ylabel('Theoretical plate height (mm)');
-    axis([0 0.9 0 10]);
+    % Output units can be altered, be aware axis labels are in accordance
+    axis([0 0.9 0 10]); % Change to resize the graph
     end
     
     if pp == 3 % Reduced Golay
@@ -798,8 +814,8 @@ if vv == 4; % GC open column
         if k == 1, error('Irregular value');end
         
         % Calculations
-        N = 1000;
-        v = linspace(0.001,10,N)';
+        N = 1000; % Alter to change the output graph
+        v = linspace(0.001,10,N)'; % Alter start point (1) and/or end point (2) to change output graph
         f = ((11*k^2)+(6*k)+1)/(96*((1+k)^2));
         g = (2*k)/(3*((1+k)^2));
         h = (2./v)+(f.*v)+(g.*df^2.*v);
@@ -813,13 +829,20 @@ if vv == 4; % GC open column
         v_ = num2str(v_opt);
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
+        % Output units can be altered, be aware guiding text is in accordance
         
         figure;
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 10 0 (h_min+10)]);
+        % Output units can be altered, be aware axis labels are in accordance
+        axis([0 10 0 (h_min+10)]);% Change to resize the graph
     end
+    
+    % From here new equations can be added for GC (open column)
+    % if pp == 4
+    %   ....
+    % end
     
 end
 
@@ -843,7 +866,7 @@ if vv == 5; % GC packed column
         B = str2double(d);
         C = str2double(e);
         
-        % Convert values to right units
+        % Convert values to right units DO NOT EDIT!
         dp = dp_/1e6;
         D = D_/1e6;
         
@@ -855,8 +878,8 @@ if vv == 5; % GC packed column
         if C<0, error('Irregular value');end
                 
         % Calculations
-        N = 100000;% number of data points
-        u_m = linspace(0.01,1,N)';% m/s
+        N = 100000;% number of data points, change the alter the output graph
+        u_m = linspace(0.01,1,N)';% m/s, change (1) and/or (2) to alter the output graph
         H_m = (A.*dp)+((B.*D)./u_m)+(C.*((dp.^2).*u_m)./D);
         H_min = min(H_m);% plate height in meters
         L = [u_m H_m];
@@ -868,12 +891,14 @@ if vv == 5; % GC packed column
         H_ = num2str(H_min.*1e3);
         set(handles.edit8,'String',u_);
         set(handles.edit9,'String',H_);
+        % Output units can be altered, be aware guiding text is in accordance
         
         figure;
         plot(u_m.*1e2,H_m.*1e3,'-');
         xlabel('Linear flow velocity (cm/s)');
         ylabel('Theoretical plate height (mm)');
-        axis([0 100 0 10]);
+        % Output units can be altered, be aware axis labels are in accordance
+        axis([0 100 0 10]); % Change to resize the graph
     end
     
     if qq == 3 % Reduced Van Deemter
@@ -902,8 +927,8 @@ if vv == 5; % GC packed column
         v_opt = (L(r,1));
         
         % Output
-        v_ = num2str(v_opt);
-        h_ = num2str(h_min);
+        v_ = num2str(v_opt);% Reduced parameter cannnot be edited
+        h_ = num2str(h_min);% Reduced parameter cannnot be edited
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -911,7 +936,8 @@ if vv == 5; % GC packed column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 20 0 (h_min+10)]);
+        % Reduced parameters cannnot be edited
+        axis([0 20 0 (h_min+10)]); % Change to resize graph
     end
     
     if qq == 4 % Knox
@@ -932,7 +958,7 @@ if vv == 5; % GC packed column
         if C < 0, error('Irregular value');end
         
         % Calculations
-        v = linspace(0.001,10,100000)';
+        v = linspace(0.001,10,100000)'; % (1): alter start point graph, (2) alter end point graph, (3) alter number of data points
         h = A.*v.^(1/3) + B./v + C.*v;
         h_min = min(h);
         L = [v h];
@@ -940,8 +966,8 @@ if vv == 5; % GC packed column
         v_opt = (L(r,1));
         
         % Output
-        v_ = num2str(v_opt);
-        h_ = num2str(h_min);
+        v_ = num2str(v_opt);% Reduced parameter cannot be edited
+        h_ = num2str(h_min);% Reduced parameter cannot be edited
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -949,8 +975,15 @@ if vv == 5; % GC packed column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 10 0 (h_min+10)]);
+        % Reduced parameter cannot be edited
+        axis([0 10 0 (h_min+10)]); % Change to resize graph
     end
+    
+    % From here new equations can be added for GC (packed column)
+    % if qq == 5
+    %   ....
+    % end
+    
 end
 
 if vv == 6; % SFC open column
@@ -981,15 +1014,15 @@ if vv == 6; % SFC open column
     if k<=0, error('Irregular value');end
     if k == 1, error('Irregular value');end
     
-    % Convert to right units
+    % Convert to right units DO NOT EDIT!
     df_ = df*1e-6; 
     dc_ = dc*1e-6;
     D_f_ = D_f*1e-11;
     D_m_ = D_m*1e-8;
     
     % Calculations
-    N = 100000;% number of data points
-    u_m = linspace(1e-5,5e-3,N)';% m/s
+    N = 100000;% number of data points, alter to change output graph
+    u_m = linspace(1e-5,5e-3,N)';% m/s, (1) alter start point graph, (2) alter end point graph
     fk = (11*(k^2)+(6*k)+1)/(96*((1+k)^2));
     gk = (2*k)/(3*((1-k)^2));
     H = ((2.*D_m_)./u_m)+(fk.*((dc_^2.*u_m)./D_m_))+(gk.*((df_^2.*u_m)./D_f_));
@@ -1003,6 +1036,7 @@ if vv == 6; % SFC open column
     H_min_ = H_min*1e3;
     u_ = num2str(u_opt_); % m/s
     H_ = num2str(H_min_); %um
+    % Output units can be changed, be aware that the guiding text next to output field is in accordance
     set(handles.edit8,'String',u_);
     set(handles.edit9,'String',H_);
     
@@ -1010,6 +1044,7 @@ if vv == 6; % SFC open column
     plot(u_m.*1e3,H.*1e3,'-');
     xlabel('Linear flow velocity (mm/s)');
     ylabel('Theoretical plate height (mm)');
+    % Output units can be changed, be aware that the axis labels are in accordance
     %axis([0 10 0 10]);
     end
     
@@ -1028,8 +1063,8 @@ if vv == 6; % SFC open column
         if k == 1, error('Irregular value');end
         
         % Calculations
-        N = 1000;
-        v = linspace(0.001,10,N)';
+        N = 1000; % Edit to change number of data points
+        v = linspace(0.001,10,N)'; % Edit to change starting point (1), end point (2)
         f = ((11*k^2)+(6*k)+1)/(96*((1+k)^2));
         g = (2*k)/(3*((1+k)^2));
         h = (2./v)+(f.*v)+(g.*df^2.*v);
@@ -1039,8 +1074,8 @@ if vv == 6; % SFC open column
         v_opt = L(r,1);
         
         % Output
-        h_ = num2str(h_min);
-        v_ = num2str(v_opt);
+        h_ = num2str(h_min); % Cannot edit reduced parameter
+        v_ = num2str(v_opt); % Cannot edit reduced parameter
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -1048,8 +1083,15 @@ if vv == 6; % SFC open column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 10 0 (h_min+10)]);
+         % Cannot edit reduced parameters
+        axis([0 10 0 (h_min+10)]); % Edit to resize graph
     end
+    
+    % From here new equations can be added for SFC (open column)
+    % if pp == 4
+    %   ....
+    % end
+    
 end
 
 if vv == 7; % SFC packed column
@@ -1072,7 +1114,7 @@ if vv == 7; % SFC packed column
         B = str2double(d);
         C = str2double(e);
         
-        % Convert values to right units
+        % Convert values to right units DO NOT EDIT!
         dp = dp_/1e6;
         D = D_/1e8;
         
@@ -1084,8 +1126,8 @@ if vv == 7; % SFC packed column
         if C<0, error('Irregular value');end
                 
         % Calculations
-        N = 100000;% number of data points
-        u_m = linspace(0.001,0.1,N)';% m/s
+        N = 100000;% number of data points, edit to change number of data points
+        u_m = linspace(0.001,0.1,N)';% m/s, stat point (1) and end point (1) can be editted
         H_m = (A.*dp)+((B.*D)./u_m)+(C.*((dp.^2).*u_m)./D);% plate height in meters
         H_min = min(H_m);% plate height in meters
         u_opt = (-B.*D)./(C.*(dp.^2)+ A.*dp-H_min); %m/s
@@ -1095,12 +1137,14 @@ if vv == 7; % SFC packed column
         H_ = num2str(H_min*1e6);
         set(handles.edit9,'String',H_);
         set(handles.edit8,'String',u_);
+        % Output units can be editted, be aware the guiding text next to output field is in accordance
         
         figure;
         plot(u_m,H_m.*1e6,'-');
         xlabel('Linear flow velocity (m/s)');
         ylabel('Theoretical plate height ( \mu m)');
-        axis([0 0.1 0 10]);
+        % Output units can be editted be aware the axis label are in accordance
+        axis([0 0.1 0 10]);% Edit to resize graph
     end
     
     if qq == 3 % Reduced Van Deemter
@@ -1121,7 +1165,7 @@ if vv == 7; % SFC packed column
         if C < 0, error('Irregular value');end
         
         % Calculations
-        v = linspace(0.001,20,100000)';
+        v = linspace(0.001,20,100000)';% Edit to change start point (1), end point (2), data points (3)
         h = A + B./v + C.*v;
         h_min = min(h);
         L = [v h];
@@ -1129,8 +1173,8 @@ if vv == 7; % SFC packed column
         v_opt = (L(r,1));
         
         % Output
-        v_ = num2str(v_opt);
-        h_ = num2str(h_min);
+        v_ = num2str(v_opt); %Reduced parameter cannot be editted
+        h_ = num2str(h_min); %Reduced parameter cannot be editted
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -1138,7 +1182,8 @@ if vv == 7; % SFC packed column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 20 0 (h_min+10)]);
+        % Reduced parametrs cannot be edited
+        axis([0 20 0 (h_min+10)]); % Edit to resize graph
     end
     
     if qq == 4 % Knox
@@ -1159,7 +1204,7 @@ if vv == 7; % SFC packed column
         if C < 0, error('Irregular value');end
         
         % Calculations
-        v = linspace(0.001,10,100000)';
+        v = linspace(0.001,10,100000)';% Edit to change start point (1), end point (2), data points (3)
         h = A.*v.^(1/3) + B./v + C.*v;
         h_min = min(h);
         L = [v h];
@@ -1167,8 +1212,8 @@ if vv == 7; % SFC packed column
         v_opt = (L(r,1));
         
         % Output
-        v_ = num2str(v_opt);
-        h_ = num2str(h_min);
+        v_ = num2str(v_opt);% Reduced parameter cannot be edited 
+        h_ = num2str(h_min);% Reduced parameter cannot be edited
         set(handles.edit8,'String',v_);
         set(handles.edit9,'String',h_);
         
@@ -1176,10 +1221,38 @@ if vv == 7; % SFC packed column
         plot(v,h,'-');
         xlabel('Reduced velocity');
         ylabel('Reduced plate height');
-        axis([0 10 0 (h_min+10)]);
+        % Reduced parameter cannot be edited
+        axis([0 10 0 (h_min+10)]);% Edit to resize graph
     end
+    
+    % From here new equations can be added for SFC (packed column)
+    % if qq == 5
+    %   ....
+    % end
   
 end
+
+% When more chromatograhic systems will be added (e.g. two-dimensional systems) continue here with vv == 8 (see below)
+% if vv == 8 (e.g. LCxLC)
+%    if pp == 1
+%    end
+%
+%    if pp == 2 % Normal Golay
+%
+%    -- Here follows the calculation + output --
+%
+%    end
+% 
+%   if pp == 3 % Reduced Golay
+%   .
+%   .
+%   .
+%   .
+%   end
+%
+% end
+ %
+   
     
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
@@ -1384,6 +1457,8 @@ q = get(handles.parameters,'Value');
         set(handles.dm,'Visible','on');
         set(handles.abc,'Visible','on');
         end
+        
+        
    end
    
    if m == 5 % GC Packed column
@@ -1411,6 +1486,10 @@ q = get(handles.parameters,'Value');
         set(handles.dm,'Visible','on');
         set(handles.abc,'Visible','on');
         end
+        
+        % Add from here new text and visibility settings for 
+        % new added equations into the GUI for GC (packed column) 
+        
    end
    
    if m == 7 % SFC Packed column
@@ -1439,7 +1518,7 @@ q = get(handles.parameters,'Value');
         set(handles.dm,'Visible','on');
         set(handles.abc,'Visible','on');
        end
-   end   
+      
         if q == 3; % Reduced Van Deemter
         
         set(handles.text1,'String','A-term');
@@ -1485,7 +1564,14 @@ q = get(handles.parameters,'Value');
         set(handles.dm,'Visible','off');
         set(handles.abc,'Visible','on');
         end
-
+        
+        % Add from here new text and visibility settings for 
+        % new added equations into the GUI for SFC (packed column) 
+        
+  end
+  
+  % Start here with adding text and visibility settings for new added systems
+  
 % --- Executes during object creation, after setting all properties.
 function parameters_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to parameters (see GCBO)
@@ -1720,7 +1806,7 @@ function dm_Callback(hObject, eventdata, handles)
 s = get(handles.chrom,'Value');
 
 if s == 2 || s == 3
-   msgbox({'MeOH: 2.369e-9 m2/s' 'ACN: 1.64e-9 m2/s'},'Diffusion coefficients','help');
+   msgbox({'MeOH: 2.369e-9 m2/s' 'ACN: 1.64e-9 m2/s'},'Diffusion coefficients','help'); % More can be added as follows: 'New: 1.5e-9 m2/s'
 end
 
 if s == 4 || s == 5
