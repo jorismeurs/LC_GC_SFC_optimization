@@ -1,0 +1,47 @@
+GUIDELINES FOR FLOW RATE OPTIMIZATION (LIQUID CHROMATOGRAPHY)
+
+Source: http://www.knauer.net/en/faq/detail/627-how-do-i-select-a-suitable-flow-rate-according-to-the-column-inner-diameter/ [Last accessed: 2-6-2016]
+
+
+For 5 um particles:
+
+ID column 2 mm 		--> optimal flow 0.15 - 0.5 mL/min
+ID column 3 mm 		--> optimal flow 0.6 mL/min
+ID column 4-4.6 mm 	--> optimal flow 0.8 - 2.0 mL/min
+ID column 8 mm 		--> optimal flow 2.0 - 4.0 mL/min
+
+USE FOLLOWING INPUT ARGUMENTS IN APPLICATION:
+
+Internal diameter: 			2
+Particle size:				5
+A: 					2
+B: 					1
+C: 					0.05
+Diffusion coefficient mobile phase:	2.369 (methanol)
+Volume fraction:			0.7
+
+RESULT
+
+For 2 mm
+
+Optimal flow rate: 		0.27956 mL/min
+Optimal linear velocity:	0.00211187 m/s
+Minimal plate height:		12.2361 um
+
+For 3 mm
+
+Optimal flow rate: 		0.27956 mL/min
+Optimal linear velocity:	0.00211187 m/s
+Minimal plate height:		12.2361 um
+
+For 4 mm
+
+Optimal flow rate: 		0.27956 mL/min
+Optimal linear velocity:	0.00211187 m/s
+Minimal plate height:		12.2361 um
+
+For 8 mm
+
+Optimal flow rate: 		0.27956 mL/min
+Optimal linear velocity:	0.00211187 m/s
+Minimal plate height:		12.2361 um
