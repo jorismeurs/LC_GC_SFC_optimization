@@ -18,11 +18,65 @@ function varargout = LC_GC_SFC(varargin)
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
+% EXPLANATION OF THE GUI
+%
+% 1. USE OF THE APPLICATION
+%
+% The this tool can be used for calculating the optimal flow rate
+% for chromatographic systems (LC, GC and SFC).
+%
+% 2. SELECTING SYSTEM AND PARAMETERS
+%
+% The system for which the calculations have to be performed can be
+% selected from the pop-up menu located on top of the GUI. Per system
+% one can choose to perform calculations for open columns as well as
+% packed columns. After choosing the right system, the parameters 
+% under which the calculations have to be performed must be set. In 
+% case of packed columns, one can choose for normal parameters 
+%(Van Deemter's equation) and reduced parameters (reduced Van Deemter's 
+% equation or Knox' equation). For open columns, one can choose between
+% normal parameters (Golay's equation) or reduced parameters (reduced
+% Golay equation).
+%
+% 3. INPUT ARGUMENTS
+%
+% Input arguments should be given according to the guiding text next
+% to the input field. As an aid common values can be found by clicking
+% on the push buttons. Calculations can be executed by clicking the
+% Calculate button
+%
+% 4. OUTPUT
+%
+% The output consists of: 
+%                           - Optimal flow rate in mL/min
+%                           - Optimal linear flow velocity in m/s
+%                           - Minimal plate height in um (here u === mu)
+%
+% Additionally, a plot will be generated in which the minimal plate
+% height is plotted against the linear flow velocity.
+%
+% 5. FURTHER INFORMATION
+%
+% A brief tutorial with supporting images can be downloaded from:
+% https://github.com/jorismeurs/LC_GC_SFC_optimization
+%
+% For contact: j.meurs@student.vu.nl
+%
+% 6. LICENSE
+%
+% This file is covered by a MIT-licences
+% The MIT License (MIT)
+% Copyright (c) 2016, Joris Meurs
+% 
+% Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+% 
+% The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+% 
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help LC_GC_SFC
-
-% Last Modified by GUIDE v2.5 08-Mar-2016 20:59:26
+% Last Modified by GUIDE v2.5 02-Jun-2016 20:59:26
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
