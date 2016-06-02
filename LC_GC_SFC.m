@@ -25,7 +25,20 @@ function varargout = LC_GC_SFC(varargin)
 % The this tool can be used for calculating the optimal flow rate
 % for chromatographic systems (LC, GC and SFC).
 %
-% 2. SELECTING SYSTEM AND PARAMETERS
+% 2. IMPORTANT HANDLING PRIOR TO LAUNCH GUI
+%
+% Make sure the .m and .fig can both be found by MATLAB. The GUI will
+% not launch when the .fig file cannot be found. In case the file has 
+% not been found, the following error message will show up in the 
+% command window:
+%
+%               Error using load
+%               Unable to read file 'LC_GC_SFC.fig'. No such file or
+%               directory.
+% 
+% The .fig file can be found at: https://github.com/jorismeurs/LC_GC_SFC_optimization/
+%
+% 3. SELECTING SYSTEM AND PARAMETERS
 %
 % The system for which the calculations have to be performed can be
 % selected from the pop-up menu located on top of the GUI. Per system
@@ -38,14 +51,14 @@ function varargout = LC_GC_SFC(varargin)
 % normal parameters (Golay's equation) or reduced parameters (reduced
 % Golay equation).
 %
-% 3. INPUT ARGUMENTS
+% 4. INPUT ARGUMENTS
 %
 % Input arguments should be given according to the guiding text next
 % to the input field. As an aid common values can be found by clicking
 % on the push buttons. Calculations can be executed by clicking the
 % Calculate button
 %
-% 4. OUTPUT
+% 5. OUTPUT
 %
 % The output consists of: 
 %                           - Optimal flow rate in mL/min
@@ -55,14 +68,14 @@ function varargout = LC_GC_SFC(varargin)
 % Additionally, a plot will be generated in which the minimal plate
 % height is plotted against the linear flow velocity.
 %
-% 5. FURTHER INFORMATION
+% 6. FURTHER INFORMATION
 %
 % A brief tutorial with supporting images can be downloaded from:
 % https://github.com/jorismeurs/LC_GC_SFC_optimization
 %
 % For contact: j.meurs@student.vu.nl
 %
-% 6. LICENSE
+% 7. LICENSE
 %
 % This file is covered by a MIT-licences
 % The MIT License (MIT)
